@@ -81,6 +81,8 @@ Arguments:
 
 > Returns 6 if you aborted.
 
+> Returns 7 if an error occured while downloading the package with `pip`
+
 ---
 - **`setup(customurl)`**
 
@@ -133,6 +135,17 @@ Arguments:
 Arguments:
 
     keepsetup (optional, default: False): Wether you want to keep setup.py or not. (> bool)
+
+> Returns 0 if success, 1 if failed (> integer)
+
+---
+- **`download()`**
+
+**Installs the package using `pip`.**
+
+Arguments:
+
+    there is no argument to pass.
 
 > Returns 0 if success, 1 if failed (> integer)
 

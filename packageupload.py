@@ -29,8 +29,13 @@ def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False
                             status = clean(keepsetup=keepsetup)
                             lifeeasy.clear()
                             if status == 0:
-                                print('Everything is ok!')
-                                return 0
+                                status = download()
+                                if status == 0:
+                                    print('Everything is ok!')
+                                    return 0
+                                else:
+                                    print('An error occured while downloading the package.')
+                                    return 7
                             else:
                                 print('An error occured while cleaning up the package directory.')
                                 return 1
@@ -75,6 +80,9 @@ def detect_setup(customurl):
         
 def module_verification():
     global main_module
+    if package_name == '':
+        print('What is the name of the module that you want to verify/package?')
+        package_name = input('> ')
     try:
         lifeeasy.display_action('Verification of the module', delay=0.1)
         if filecenter.isdir(lifeeasy.working_dir() + '/' + package_name):
@@ -98,8 +106,8 @@ def module_verification():
                             continue
                         if filecenter.extension_from_base(file) == '.py':
                             filecenter.move(lifeeasy.working_dir() + file, lifeeasy.working_dir() + '/' + package_name + '/' + file)
-                print('Make sure to move all the files used by your package in the folder "' + package_name + '"')
-                input('Press [enter] to coninue...')
+            print('Make sure to move all the files used by your package in the folder "' + package_name + '"')
+            input('Press [enter] to coninue...')
             
         else:
             filecenter.make_dir(lifeeasy.working_dir() + '/' + package_name)
@@ -434,6 +442,9 @@ def build():
         return 1
 
 def upload():
+    if package_name == '':
+        print('What is the name of the package that you want to upload?')
+        package_name = input('> ')
     try:
         print('')
         print('Uploading the package')
@@ -480,6 +491,16 @@ def clean(keepsetup=False):
             if keepsetup == False:
                 print('Deleting setup.py')
                 filecenter.delete(lifeeasy.working_dir() + '/setup.py')
+        return 0
+    except:
+        return 1
+
+def download():
+    if package_name == '':
+        print('What is the name of the package that you want to install?')
+        package_name = input('> ')
+    try:
+        lifeeasy.command('pip install ' + package_name)
         return 0
     except:
         return 1
