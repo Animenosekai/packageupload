@@ -1,6 +1,6 @@
 # PackageUpload
  
- ### **The most easy to upload your packages on PyPI**
+ ### **The most easy way to upload your packages to PyPI**
 
 ## Table of Content
 - [Installation](#installation)  

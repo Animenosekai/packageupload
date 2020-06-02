@@ -86,6 +86,7 @@ def detect_setup(customurl):
         
 def module_verification():
     global main_module
+    global package_name
     if package_name == '':
         print('What is the name of the module that you want to verify/package?')
         package_name = input('> ')
