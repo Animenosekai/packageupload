@@ -23,7 +23,7 @@ Simply type `pip install packageupload` in your terminal/command-line prompt.
 
 ## What is PackageUpload?
 It is a simple python script that will help you upload your packages on PyPI (because it's boring to build setup.py and upload it manually)
-> You just have to launch python,  `import packageupload` and launch `packageupload.start()` !
+> You just have to launch python,  `import packageupload` and launch `packageupload.start()` !
 
 
 <a name="usage"/>
@@ -42,7 +42,7 @@ It is a simple python script that will help you upload your packages on PyPI (be
 
 ### Instructions
 
-#### Open the package directory in your command-prompt (or `cd`to it) and open python (`python3` or `python`).
+#### Open the package directory in your command-prompt (or `cd`to it) and open python (`python3` or `python`).
 
 #### Import PackageUpload `import packageupload`
 
@@ -175,7 +175,7 @@ The File Center Library has four third-party dependencies.
 - `filecenter`
 - `lifeeasy`
 
-*(`filecenter`and `lifeeasy`are both written by me)*
+*(`filecenter`and `lifeeasy` are both written by me)*
 
 SetupTools is used to make build the package.
 
