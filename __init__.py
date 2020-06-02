@@ -437,6 +437,10 @@ def upload():
         return 1
 
 def clean(keepsetup=False):
+    if package_name == '':
+        package_name = input('What is the package name? ')
+    if main_module == '':
+        main_module = input('What is the main module file name (with extension) ? ')
     try:
         if filecenter.exists(lifeeasy.working_dir() + '/' + package_name + '.egg-info'):
             filecenter.delete(lifeeasy.working_dir() + '/' + package_name + '.egg-info')
