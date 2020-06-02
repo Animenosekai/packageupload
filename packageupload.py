@@ -449,6 +449,7 @@ def build():
         return 1
 
 def upload():
+    global package_name
     if package_name == '':
         print('What is the name of the package that you want to upload?')
         package_name = input('> ')
@@ -503,6 +504,7 @@ def clean(keepsetup=False):
         return 1
 
 def download():
+    global package_name
     if package_name == '':
         print('What is the name of the package that you want to install?')
         package_name = input('> ')
