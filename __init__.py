@@ -437,6 +437,8 @@ def upload():
         return 1
 
 def clean(keepsetup=False):
+    global package_name
+    global main_module
     if package_name == '':
         package_name = input('What is the package name? ')
     if main_module == '':
