@@ -66,6 +66,8 @@ Arguments:
 
     customurl (optional, default: False): Wether you have a website other than the GitHub repo for the package and that you to add it. (> bool)
 
+    upgrade (optional, default: False): If True, it will not check the availability of the name.
+
 
 > Returns 0 if everything is fine and uploaded correctly to PyPI
 
@@ -91,6 +93,8 @@ Arguments:
 Arguments:
 
     customurl (optional, default: False): Wether you have a website other than the GitHub repo for the package and that you to add it. (> bool).
+
+    upgrade (optional, default: False): If True, it will not check the availability of the name.
     
 > Returns 0 if success 1 if failed (> integer)
 

@@ -7,13 +7,13 @@ package_name = ''
 main_module = ''
 customclassifiers_bool = True
 
-def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False):
+def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False, upgrade=False):
     global customclassifiers_bool
     customclassifiers_bool = customclassifiers
     lifeeasy.clear()
     status = first_confirmation()
     if status == 0:
-        status = detect_setup(customurl=customurl)
+        status = detect_setup(customurl=customurl, upgrade=upgrade)
         lifeeasy.clear()
         if status == 0:
             status = module_verification()
@@ -77,12 +77,12 @@ def first_confirmation():
     else:
         return 0
 
-def detect_setup(customurl):
+def detect_setup(customurl, upgrade):
     if filecenter.exists(lifeeasy.working_dir() + '/setup.py'):
         print('setup.py detected')
         return 0
     else:
-        return setup(customurl=customurl)
+        return setup(customurl=customurl, upgrade=upgrade)
         
 def module_verification():
     global main_module
@@ -142,7 +142,7 @@ def module_verification():
                     
 
 
-def setup(customurl=False):
+def setup(customurl=False, upgrade=False):
     global package_name
     setup = []
 
@@ -165,8 +165,13 @@ def setup(customurl=False):
             print('An error occured with the name verification...')
             return 1
 
-    if naming_package() == 1:
-        return 1
+    if upgrade == False:
+        if naming_package() == 1:
+            return 1
+    else:
+        # NAME
+        package_name = input("What's the name of your package? ")
+        print('')
 
     # VERSION
     version = input("What's the version of " + package_name + '? ')
