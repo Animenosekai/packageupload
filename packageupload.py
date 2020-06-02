@@ -7,41 +7,54 @@ package_name = ''
 main_module = ''
 customclassifiers_bool = True
 
-def start(keepsetup=False, nocleanup=False, customclassifiers=True, customurl=False):
+def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False):
     global customclassifiers_bool
     customclassifiers_bool = customclassifiers
     lifeeasy.clear()
     status = first_confirmation()
     if status == 0:
         status = detect_setup(customurl=customurl)
+        lifeeasy.clear()
         if status == 0:
             status = module_verification()
+            lifeeasy.clear()
             if status == 0:
                 status = build()
+                lifeeasy.clear()
                 if status == 0:
                     status = upload()
+                    lifeeasy.clear()
                     if status == 0:
-                        if nocleanup == False:
+                        if cleanup == True:
                             status = clean(keepsetup=keepsetup)
+                            lifeeasy.clear()
                             if status == 0:
                                 print('Everything is ok!')
+                                return 0
                             else:
                                 print('An error occured while cleaning up the package directory.')
+                                return 1
                         else:
                             print('Everything is ok!')
+                            return 0
                     else:
                         print('An error occured while uploading your package.')
+                        return 2
                 else:
                     print('An error occured while building the package.')
+                    return 3
             else:
                 print('An error occured while verifying the module.')
+                return 4
         else:
             print('An error occured while creating your setup file.')
+            return 5
     else:
         print('Ok!')
+        return 6
 
 def first_confirmation():
-    print('Make sure to have uploaded your package to GitHub')
+    print('Make sure to have your package uploaded to GitHub')
     lifeeasy.sleep(1)
     print('Make sure to make a release of this package on GitHub')
     lifeeasy.sleep(1)
@@ -52,10 +65,6 @@ def first_confirmation():
         return 1
     else:
         return 0
-    
-
-def confirmation():
-    input('Press [enter] to coninue...')
 
 def detect_setup(customurl):
     if filecenter.exists(lifeeasy.working_dir() + '/setup.py'):
@@ -67,7 +76,7 @@ def detect_setup(customurl):
 def module_verification():
     global main_module
     try:
-        print('Verification of the module...')
+        lifeeasy.display_action('Verification of the module', delay=0.1)
         if filecenter.isdir(lifeeasy.working_dir() + '/' + package_name):
             if filecenter.isfile(lifeeasy.working_dir() + '/' + package_name + '/__init__.py'):
                 main_module = '__init__.py'
@@ -90,6 +99,7 @@ def module_verification():
                         if filecenter.extension_from_base(file) == '.py':
                             filecenter.move(lifeeasy.working_dir() + file, lifeeasy.working_dir() + '/' + package_name + '/' + file)
                 print('Make sure to move all the files used by your package in the folder "' + package_name + '"')
+                input('Press [enter] to coninue...')
             
         else:
             filecenter.make_dir(lifeeasy.working_dir() + '/' + package_name)
@@ -110,13 +120,14 @@ def module_verification():
                     if filecenter.extension_from_base(file) == '.py':
                         filecenter.move(lifeeasy.working_dir() + file, lifeeasy.working_dir() + '/' + package_name + '/' + file)
             print('Make sure to move all the files used by your package in the folder "' + package_name + '"')
+            input('Press [enter] to coninue...')
         return 0
     except:
         return 1
                     
 
 
-def setup(customurl):
+def setup(customurl=False):
     global package_name
     setup = []
 
@@ -126,7 +137,7 @@ def setup(customurl):
         package_name = input("What's the name of your package? ")
         print('')
 
-        print('Verification...')
+        lifeeasy.display_action('Verification', delay=0.1)
         name_verification = lifeeasy.request('https://pypi.org/project/' + package_name + '/', 'get')
         if name_verification.status_code == 404:
             print('The name is available!')
@@ -415,7 +426,7 @@ def setup(customurl):
 
 def build():
     try:
-        print('Building the package...')
+        lifeeasy.display_action('Building the package', delay=0.1)
         print('')
         lifeeasy.command('python3 setup.py sdist bdist_wheel')
         return 0
@@ -439,29 +450,36 @@ def upload():
 def clean(keepsetup=False):
     global package_name
     global main_module
+    lifeeasy.display_action('Cleaning the package directory', delay=0.1)
     if package_name == '':
         package_name = input('What is the package name? ')
     if main_module == '':
         main_module = input('What is the main module file name (with extension) ? ')
     try:
         if filecenter.exists(lifeeasy.working_dir() + '/' + package_name + '.egg-info'):
+            print('Removing .egg-info')
             filecenter.delete(lifeeasy.working_dir() + '/' + package_name + '.egg-info')
         if filecenter.exists(lifeeasy.working_dir() + '/dist'):
+            print('Removing dist')
             filecenter.delete(lifeeasy.working_dir() + '/dist')
         if filecenter.exists(lifeeasy.working_dir() + '/build'):
+            print('Removing build')
             filecenter.delete(lifeeasy.working_dir() + '/build')
         if filecenter.isdir(lifeeasy.working_dir() + '/' + package_name):
+            print("Moving the package to its original location")
             for file in filecenter.files_in_dir(lifeeasy.working_dir() + '/' + package_name):
+                print("Moving " + file)
                 if file == '__init__.py':
                     filecenter.move(lifeeasy.working_dir() + '/' + package_name + '/' + file, lifeeasy.working_dir() + '/' + main_module)
                 else:
                     filecenter.move(lifeeasy.working_dir() + '/' + package_name + '/' + file, lifeeasy.working_dir() + '/' + file)
         if filecenter.exists(lifeeasy.working_dir() + '/' + package_name):
+            print('Deleting the package temp directory')
             filecenter.delete(lifeeasy.working_dir() + '/' + package_name)
         if filecenter.isfile(lifeeasy.working_dir() + '/setup.py'):
             if keepsetup == False:
+                print('Deleting setup.py')
                 filecenter.delete(lifeeasy.working_dir() + '/setup.py')
         return 0
     except:
         return 1
-
