@@ -1,8 +1,6 @@
 # PackageUpload
  
  ### **The most easy to upload your packages on PyPI**
- 
-[![PyPI version](https://badge.fury.io/py/lifeeasy.svg)](https://badge.fury.io/py/lifeeasy)
 
 ## Table of Content
 - [Installation](#installation)  
