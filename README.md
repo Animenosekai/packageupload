@@ -40,6 +40,18 @@ It is a simple python script that will help you upload your packages on PyPI (be
 
 ---
 
+### Instructions
+
+#### Open the package directory in your command-prompt (or `cd`to it) and open python (`python3` or `python`).
+
+#### Import PackageUpload `import packageupload`
+
+#### Run `packageupload.start()`
+
+---
+
+### Functions
+
 - **`start(keepsetup, nocleanup, customclassifiers, customurl)`**
 
 **It will guide you and help you upload your packages on PyPI**
