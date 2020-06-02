@@ -29,13 +29,19 @@ def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False
                             status = clean(keepsetup=keepsetup)
                             lifeeasy.clear()
                             if status == 0:
-                                status = download()
-                                if status == 0:
+                                print('Do you want to install the package?')
+                                user_choice = input('[enter] to install or enter [quit] ')
+                                if user_choice.lower() != 'quit' and user_choice.lower() != 'stop' and user_choice.lower() != 'no':
+                                    status = download()
+                                    if status == 0:
+                                        print('Everything is ok!')
+                                        return 0
+                                    else:
+                                        print('An error occured while downloading the package.')
+                                        return 7
+                                else:
                                     print('Everything is ok!')
                                     return 0
-                                else:
-                                    print('An error occured while downloading the package.')
-                                    return 7
                             else:
                                 print('An error occured while cleaning up the package directory.')
                                 return 1
