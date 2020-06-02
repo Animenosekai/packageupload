@@ -499,6 +499,9 @@ def clean(keepsetup=False):
             if keepsetup == False:
                 print('Deleting setup.py')
                 filecenter.delete(lifeeasy.working_dir() + '/setup.py')
+        if filecenter.isdir(lifeeasy.working_dir() + '/__pycache__'):
+            print('Deleting caches')
+            filecenter.delete(lifeeasy.working_dir() + '/__pycache__')
         return 0
     except:
         return 1
