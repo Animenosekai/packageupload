@@ -9,6 +9,7 @@
 import lifeeasy
 import filecenter
 import random
+import json
 
 # var declaration
 package_name = ''
@@ -154,8 +155,13 @@ def setup(customurl=False, upgrade=False):
     global package_name
     setup = []
 
+    # AUTHOR
+    author = input('Who is the author? ')
+    print('')
+
     def naming_package():
         global package_name
+        global upgrade
         # NAME
         package_name = input("What's the name of your package? ")
         print('')
@@ -165,10 +171,21 @@ def setup(customurl=False, upgrade=False):
         if name_verification.status_code == 404:
             print('The name is available!')
         elif name_verification.status_code == 200:
-            print('This name is already taken!')
-            print('Please try giving another name to the package...')
-            print('')
-            naming_package()
+            request = lifeeasy.request('https://pypi.org/pypi/' + package_name + '/json', 'get')
+            request_json = json.loads(request.json())
+            if request_json['info']['author'] == author:
+                print('upload mode: upgrade')
+                print('Do you want to change some metadatas or keep them?')
+                user_choice = input('press [enter] to continue with current metadatas or type [continue] to continue modifying the metadatas... ')
+                if user_choice.lower() == 'continue' or user_choice.lower() == 'ontinue' or user_choice.lower() == 'cntinue' or user_choice.lower() == 'coninue' or user_choice.lower() == 'contnue' or user_choice.lower() == 'contiue' or user_choice.lower() == 'contine' or user_choice.lower() == 'continu':
+                    upgrade = False
+                else:
+                    upgrade = True
+            else:
+                print('This name is already taken!')
+                print('Please try giving another name to the package...')
+                print('')
+                naming_package()
         else:
             print('An error occured with the name verification...')
             return 1
@@ -184,151 +201,144 @@ def setup(customurl=False, upgrade=False):
     # VERSION
     version = input("What's the version of " + package_name + '? ')
     print('')
-    
-    # DESCRIPTION
-    print('Write a little summary/description of ' + package_name)
-    desc = input('> ')
-    print('')
-    
-    # AUTHOR
-    author = input('Who is the author? ')
-    print('')
-    
-    # EMAIL
-    email = input('What is his ' + author + "'s email? ")
-    print('')
-
-    # LICENSE
-    print('Warning: the license name is case-sensitive!')
-    package_license = input('What is the license for ' + package_name + ' ? ')
-    package_license_classifier = 'License :: OSI Approved :: ' + package_license + ' License'
-    print('')
-
-    request = lifeeasy.request('https://github.com/' + author + '/' + package_name, 'get')
-    if request.status_code == 404:
-        # GITHUB REPO
-        print("What is the GitHub repository for this package?") 
-        url = input('> ')
-        print('')
-    else:
-        url = 'https://github.com/' + author + '/' + package_name
         
-    # ARCHIVE
-    if url[-1] == '/':
-        download_url_try = url + 'archive/' + version + '.tar.gz'
-    else:
-        download_url_try = url + '/archive/' + version + '.tar.gz'
-    request = lifeeasy.request(method='get', url=download_url_try)
-    if request.status_code == 200:
-        download_url = download_url_try
-    else:
-        github_release = input("What is the name of the GitHub release? ")
+    if upgrade == False:
+        # DESCRIPTION
+        print('Write a little summary/description of ' + package_name)
+        desc = input('> ')
         print('')
-        if url[-1] == '/':
-            download_url_try = url + 'archive/' + github_release + '.tar.gz'
+        
+        # EMAIL
+        email = input('What is his ' + author + "'s email? ")
+        print('')
+
+        # LICENSE
+        print('Warning: the license name is case-sensitive!')
+        package_license = input('What is the license for ' + package_name + ' ? ')
+        package_license_classifier = 'License :: OSI Approved :: ' + package_license + ' License'
+        print('')
+
+        request = lifeeasy.request('https://github.com/' + author + '/' + package_name, 'get')
+        if request.status_code == 404:
+            # GITHUB REPO
+            print("What is the GitHub repository for this package?") 
+            url = input('> ')
+            print('')
         else:
-            download_url_try = url + '/archive/' + github_release + '.tar.gz'
+            url = 'https://github.com/' + author + '/' + package_name
+            
+        # ARCHIVE
+        if url[-1] == '/':
+            download_url_try = url + 'archive/' + version + '.tar.gz'
+        else:
+            download_url_try = url + '/archive/' + version + '.tar.gz'
         request = lifeeasy.request(method='get', url=download_url_try)
         if request.status_code == 200:
             download_url = download_url_try
         else:
-            def ask_for_github_release():
-                global download_url
-                print('What is the URL of your GitHub release? (it ends with .tar.gz)')
-                download_url_try = input('> ')
+            if url[-1] == '/':
+                download_url_try = url + 'archive/v' + version + '.tar.gz'
+            else:
+                download_url_try = url + '/archive/v' + version + '.tar.gz'
+            request = lifeeasy.request(method='get', url=download_url_try)
+            if request.status_code == 200:
+                download_url = download_url_try
+            else:
+                github_release = input("What is the name of the GitHub release? ")
                 print('')
+                if url[-1] == '/':
+                    download_url_try = url + 'archive/' + github_release + '.tar.gz'
+                else:
+                    download_url_try = url + '/archive/' + github_release + '.tar.gz'
                 request = lifeeasy.request(method='get', url=download_url_try)
                 if request.status_code == 200:
                     download_url = download_url_try
                 else:
-                    print("It seems that you mistyped the URL or that the repository is private...")
-                    lifeeasy.sleep(2)
-                    print("Please put your GitHub repository visibility in public and retry...")
-                    print('')
-                    lifeeasy.sleep(2)
+                    def ask_for_github_release():
+                        global download_url
+                        print('What is the URL of your GitHub release? (it ends with .tar.gz)')
+                        download_url_try = input('> ')
+                        print('')
+                        request = lifeeasy.request(method='get', url=download_url_try)
+                        if request.status_code == 200:
+                            download_url = download_url_try
+                        else:
+                            print("It seems that you mistyped the URL or that the repository is private...")
+                            lifeeasy.sleep(2)
+                            print("Please put your GitHub repository visibility in public and retry...")
+                            print('')
+                            lifeeasy.sleep(2)
+                            ask_for_github_release()
                     ask_for_github_release()
-            ask_for_github_release()
 
-    # CUSTOM URL
-    if customurl == True:
-        print('What is the URL of the website for this package?')
-        url = input('> ')
+        # CUSTOM URL
+        if customurl == True:
+            print('What is the URL of the website for this package?')
+            url = input('> ')
+            print('')
+            
+        # KEYWORDS
+        print('Enter a comma-separated list of keywords for your package')
+        keywords = input('> ')
+        keywords = keywords.split(',')
         print('')
-        
-    # KEYWORDS
-    print('Enter a comma-separated list of keywords for your package')
-    keywords = input('> ')
-    keywords = keywords.split(',')
-    print('')
 
-    # DEPENDENCIES
-    print('Enter a comma-separated list of dependencies for your package')
-    dependencies = input('> ')
-    dependencies = dependencies.replace(' ', '')
-    dependencies = dependencies.split(',')
-    print('')
-
-
-    # PYTHON VERSIONS
-    print('Enter a comma-separated list of supported Python version numbers for this package')
-    print('(i.e 3,3.4,3.5,3.6,3.7,3.8)')
-    python_versions = input('> ')
-    print('')
-    python_versions = python_versions.replace(' ', '')
-    python_versions = python_versions.split(',')
-
-    versions_classifiers = []
-    for python_version in python_versions:
-        versions_classifiers.append('Programming Language :: Python :: ' + python_version)
-
-
-    dev_status = 'Development Status :: 4 - Beta'
-    def development_status():
-        global dev_status
-        global customclassifiers_bool
-        lifeeasy.clear()
-        print('Choose a development status from the following')
+        # DEPENDENCIES
+        print('Enter a comma-separated list of dependencies for your package')
+        dependencies = input('> ')
+        dependencies = dependencies.replace(' ', '')
+        dependencies = dependencies.split(',')
         print('')
-        print('Alpha')
-        print('Beta')
-        print('Stable')
-        print('')
-        print('Or press [enter] to add a custom one when adding classifiers...')
-        print('')
-        print('')
-        dev_status_try = input('> ')
 
-        if dev_status_try.lower() == 'alpha':
-            dev_status = 'Development Status :: 3 - Alpha'
-        elif dev_status_try.lower() == 'beta':
-            dev_status = 'Development Status :: 4 - Beta'
-        elif dev_status_try.lower() == 'stable':
-            dev_status = 'Development Status :: 5 - Production/Stable'
-        elif dev_status_try == '':
-            customclassifiers_bool = True
-        else:
-            print("Sorry but I couldn't recognize the status.")
-            lifeeasy.sleep(1)
-            print('Please try again...')
-            lifeeasy.sleep(1)
-            development_status()
-    development_status()
 
-    # CUSTOM CLASSIFIERS
-    custom_classifiers = []
-    if customclassifiers_bool == True:
-        lifeeasy.clear()
-        print("What are the custom classifiers that you want to add?")
+        # PYTHON VERSIONS
+        print('Enter a comma-separated list of supported Python version numbers for this package')
+        print('(i.e 3,3.4,3.5,3.6,3.7,3.8)')
+        python_versions = input('> ')
         print('')
-        print("You need to enter your classifiers one-by-one")
-        print("You need to write the full classifier")
-        print("When you are done press [enter] again without entering anything.")
-        print('')
-        print('')
-        user_choice = input('> ')
-        if user_choice != '':
-            custom_classifiers.append(user_choice)
-        while user_choice != '':
+        python_versions = python_versions.replace(' ', '')
+        python_versions = python_versions.split(',')
+
+        versions_classifiers = []
+        for python_version in python_versions:
+            versions_classifiers.append('Programming Language :: Python :: ' + python_version)
+
+
+        dev_status = 'Development Status :: 4 - Beta'
+        def development_status():
+            global dev_status
+            global customclassifiers_bool
+            lifeeasy.clear()
+            print('Choose a development status from the following')
+            print('')
+            print('Alpha')
+            print('Beta')
+            print('Stable')
+            print('')
+            print('Or press [enter] to add a custom one when adding classifiers...')
+            print('')
+            print('')
+            dev_status_try = input('> ')
+
+            if dev_status_try.lower() == 'alpha':
+                dev_status = 'Development Status :: 3 - Alpha'
+            elif dev_status_try.lower() == 'beta':
+                dev_status = 'Development Status :: 4 - Beta'
+            elif dev_status_try.lower() == 'stable':
+                dev_status = 'Development Status :: 5 - Production/Stable'
+            elif dev_status_try == '':
+                customclassifiers_bool = True
+            else:
+                print("Sorry but I couldn't recognize the status.")
+                lifeeasy.sleep(1)
+                print('Please try again...')
+                lifeeasy.sleep(1)
+                development_status()
+        development_status()
+
+        # CUSTOM CLASSIFIERS
+        custom_classifiers = []
+        if customclassifiers_bool == True:
             lifeeasy.clear()
             print("What are the custom classifiers that you want to add?")
             print('')
@@ -340,7 +350,33 @@ def setup(customurl=False, upgrade=False):
             user_choice = input('> ')
             if user_choice != '':
                 custom_classifiers.append(user_choice)
-    
+            while user_choice != '':
+                lifeeasy.clear()
+                print("What are the custom classifiers that you want to add?")
+                print('')
+                print("You need to enter your classifiers one-by-one")
+                print("You need to write the full classifier")
+                print("When you are done press [enter] again without entering anything.")
+                print('')
+                print('')
+                user_choice = input('> ')
+                if user_choice != '':
+                    custom_classifiers.append(user_choice)
+
+    else:
+        package_infos = lifeeasy.request('https://pypi.org/pypi/' + package_name + '/json', 'get')
+        package_infos = json.loads(package_infos.json())
+        package_license = package_infos['info']['license']
+        desc = package_infos['info']['summary']
+        author = package_infos['info']['author']
+        email = package_infos['info']['author_email']
+        url = package_infos['info']['home_page']
+        download_url = package_infos['info']['download_url']
+        keywords_string = package_infos['info']['keywords']
+        keywords = keywords_string.split(',')
+        dependencies = package_infos['info']['requires_dist']
+        classifiers = package_infos['info']['classifiers']
+
     lifeeasy.clear()
     print('Building your setup file')
     lifeeasy.sleep(random.uniform(0.126, 0.31))
@@ -372,6 +408,9 @@ def setup(customurl=False, upgrade=False):
         setup.append('')  
 
         long_description_type = 'text/markdown'
+
+    else:
+        long_description_type = ''
 
     # Need to add more readme type
 
@@ -425,11 +464,13 @@ def setup(customurl=False, upgrade=False):
 
     print('creating the package classifiers')
     lifeeasy.sleep(random.uniform(0.126, 0.31))
-    classifiers = []
-    classifiers.append(dev_status)
-    classifiers.append(package_license_classifier)
-    classifiers.extend(versions_classifiers)
-    classifiers.extend(custom_classifiers)
+    if upgrade == False:
+        classifiers = []
+        classifiers.append(dev_status)
+        classifiers.append(package_license_classifier)
+        classifiers.extend(versions_classifiers)
+        classifiers.extend(custom_classifiers)
+
 
     print('adding the package classifiers')
     lifeeasy.sleep(random.uniform(0.126, 0.31))
