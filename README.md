@@ -39,15 +39,35 @@ It is a simple python script that will help you upload your packages on PyPI (be
 
 **Then you need to create a release for this repository.**
 
+**You also need a PyPI account (obviously)**
+
 ---
 
 ### Instructions
 
-#### Open the package directory in your command-prompt (or `cd`to it) and open python (`python3` or `python`).
+#### Open the package directory in your command-prompt (or `cd`to it).
 
-#### Import PackageUpload `import packageupload`
+#### Run `packageupload`
 
-#### Run `packageupload.start()`
+---
+
+### Options
+
+#### Usage
+
+- `packageupload <option1> <option2>`
+
+#### Available Options
+
+- `nocleanup`: To leave everything without cleaning up the directory to its first state.
+
+- `keepsetup`: To leave the setup.py file (not needed if nocleanup)
+
+- `customclassifiers`: To add custom classifiers to your setup file
+
+- `customurl`: To add a the website URL for the package (if you want something other than the GitHub Repository)
+
+- `customsetup`: If you want to customize your setup with other sections (i.e. entry_points, ...)
 
 ---
 

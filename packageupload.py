@@ -16,9 +16,12 @@ package_name = ''
 main_module = ''
 customclassifiers_bool = True
 upgrade = False
+custom_setup = False
 
-def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False, upgrade=False):
+def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False, upgrade=False, customsetup=False):
     global customclassifiers_bool
+    global custom_setup
+    custom_setup = customsetup
     customclassifiers_bool = customclassifiers
     lifeeasy.clear()
     status = first_confirmation()
@@ -155,6 +158,7 @@ def module_verification():
 def setup(customurl=False, force_upgrade=False):
     global package_name
     global upgrade
+    global custom_setup
 
     upgrade = force_upgrade
 
@@ -382,6 +386,14 @@ def setup(customurl=False, force_upgrade=False):
         dependencies = package_infos['info']['requires_dist']
         classifiers = package_infos['info']['classifiers']
 
+    # CUSTOM SETUP
+
+    if custom_setup == True:
+        print('Add your custom setup sections (comma-separated)')
+        setup_customized = input('> ')
+        if len(setup_customized) == 0:
+            custom_setup = False
+
     lifeeasy.clear()
     print('Building your setup file')
     lifeeasy.sleep(random.uniform(0.126, 0.31))
@@ -489,6 +501,11 @@ def setup(customurl=False, force_upgrade=False):
     lifeeasy.sleep(random.uniform(0.126, 0.31))
     setup.append('long_description_content_type = "' + long_description_type + '"')
 
+    if custom_setup == True:
+        print('adding your custom setup sections')
+        lifeeasy.sleep(random.uniform(0.126, 0.31))
+        setup.append(setup_customized)
+
     print('finishing...')
     lifeeasy.sleep(random.uniform(0.126, 0.31))
     setup.append(')')
@@ -514,7 +531,7 @@ def upload():
         package_name = input('> ')
     try:
         print('')
-        print('Uploading the package')
+        lifeeasy.display_action('Uploading the package', delay=0.1)
         lifeeasy.command('twine upload dist/*')
         print('')
         print('Package uploaded to PyPI!')
