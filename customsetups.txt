@@ -1,0 +1,1 @@
+entry_points = {'console_scripts': ['packageupload=packageupload.command_line:main']}
