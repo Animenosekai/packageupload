@@ -499,7 +499,7 @@ def setup(customurl=False, force_upgrade=False):
 
     print('adding the package readme type')
     lifeeasy.sleep(random.uniform(0.126, 0.31))
-    setup.append('long_description_content_type = "' + long_description_type + '"')
+    setup.append('long_description_content_type = "' + long_description_type + '",')
 
     if custom_setup == True:
         print('adding your custom setup sections')
