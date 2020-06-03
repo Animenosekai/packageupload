@@ -3,7 +3,7 @@
 ### by Anime no Sekai
 ### 2020
 ### 
-### v.1.3
+### v.1.4
 
 
 import lifeeasy
@@ -15,6 +15,7 @@ import json
 package_name = ''
 main_module = ''
 customclassifiers_bool = True
+upgrade = False
 
 def start(keepsetup=False, cleanup=True, customclassifiers=True, customurl=False, upgrade=False):
     global customclassifiers_bool
@@ -91,7 +92,7 @@ def detect_setup(customurl, upgrade):
         print('setup.py detected')
         return 0
     else:
-        return setup(customurl=customurl, upgrade=upgrade)
+        return setup(customurl=customurl, force_upgrade=upgrade)
         
 def module_verification():
     global main_module
@@ -151,8 +152,12 @@ def module_verification():
                     
 
 
-def setup(customurl=False, upgrade=False):
+def setup(customurl=False, force_upgrade=False):
     global package_name
+    global upgrade
+
+    upgrade = force_upgrade
+
     setup = []
 
     # AUTHOR
@@ -566,7 +571,10 @@ def download():
         print('What is the name of the package that you want to install?')
         package_name = input('> ')
     try:
-        lifeeasy.command('pip install ' + package_name)
+        if upgrade == False:
+            lifeeasy.command('pip install ' + package_name)
+        else:
+            lifeeasy.command('pip install ' + package_name + ' --upgrade')
         return 0
     except:
         return 1
