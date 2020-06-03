@@ -23,7 +23,8 @@ Simply type `pip install packageupload` in your terminal/command-line prompt.
 
 ## What is PackageUpload?
 It is a simple python script that will help you upload your packages on PyPI (because it's boring to build setup.py and upload it manually)
-> You just have to launch python,  `import packageupload` and launch `packageupload.start()` !
+
+> You just have to launch `packageupload` from your command-prompt/terminal!
 
 
 <a name="usage"/>
