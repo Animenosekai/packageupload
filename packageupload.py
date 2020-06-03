@@ -1,3 +1,11 @@
+###                 PACKAGEUPLOAD
+### 
+### by Anime no Sekai
+### 2020
+### 
+### v.1.3
+
+
 import lifeeasy
 import filecenter
 import random
