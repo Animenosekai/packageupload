@@ -3,7 +3,7 @@
 ### by Anime no Sekai
 ### 2020
 ### 
-### v.1.4
+### v.1.5
 
 
 import lifeeasy
