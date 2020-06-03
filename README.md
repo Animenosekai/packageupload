@@ -1,6 +1,9 @@
 # PackageUpload
  
  ### **The most easy way to upload your packages to PyPI!**
+ 
+ [![PyPI version](https://badge.fury.io/py/packageupload.svg)](https://badge.fury.io/py/packageupload)
+ 
 
 ## Table of Content
 - [Installation](#installation)  
