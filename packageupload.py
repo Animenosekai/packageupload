@@ -177,7 +177,7 @@ def setup(customurl=False, force_upgrade=False):
             print('The name is available!')
         elif name_verification.status_code == 200:
             request = lifeeasy.request('https://pypi.org/pypi/' + package_name + '/json', 'get')
-            request_json = json.loads(request.json())
+            request_json = json.loads(request.text)
             if request_json['info']['author'] == author:
                 print('upload mode: upgrade')
                 print('Do you want to change some metadatas or keep them?')
@@ -370,7 +370,7 @@ def setup(customurl=False, force_upgrade=False):
 
     else:
         package_infos = lifeeasy.request('https://pypi.org/pypi/' + package_name + '/json', 'get')
-        package_infos = json.loads(package_infos.json())
+        package_infos = json.loads(package_infos.text)
         package_license = package_infos['info']['license']
         desc = package_infos['info']['summary']
         author = package_infos['info']['author']
