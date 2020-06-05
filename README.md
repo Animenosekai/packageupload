@@ -2,8 +2,13 @@
  
  ### **The most easy way to upload your packages to PyPI!**
  
- [![PyPI version](https://badge.fury.io/py/packageupload.svg)](https://badge.fury.io/py/packageupload)
- 
+ [![PyPI version](https://badge.fury.io/py/packageupload.svg)](https://pypi.org/project/packageupload/)
+ [![PyPI - Downloads](https://img.shields.io/pypi/dm/packageupload)](https://pypistats.org/packages/packageupload)
+ [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/packageupload)](https://pypi.org/project/packageupload/)
+ [![PyPI - Status](https://img.shields.io/pypi/status/packageupload)](https://pypi.org/project/packageupload/)
+ [![GitHub - License](https://img.shields.io/github/license/Animenosekai/packageupload)](https://github.com/Animenosekai/packageupload/blob/master/LICENSE)
+ [![GitHub issues](https://img.shields.io/github/issues-raw/Animenosekai/packageupload)](https://github.com/Animenosekai/packageupload/issues)
+ [![GitHub top language](https://img.shields.io/github/languages/top/Animenosekai/packageupload)](https://github.com/Animenosekai/packageupload)
 
 ## Table of Content
 - [Installation](#installation)  
