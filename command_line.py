@@ -2,32 +2,32 @@ import packageupload
 import sys
 
 def main():
-    if 'nocleanup' in sys.argv:
+    if 'nocleanup' in sys.argv or '-nocleanup' in sys.argv or '--nocleanup' in sys.argv:
         cleanup = False
     else:
         cleanup = True
     
-    if 'keepsetup' in sys.argv:
+    if 'keepsetup' in sys.argv or '-keepsetup' in sys.argv or '--keepsetup' in sys.argv:
         keepsetup = True
     else:
         keepsetup = False
     
-    if 'customclassifiers' in sys.argv:
+    if 'customclassifiers' in sys.argv or '-customclassifiers' in sys.argv or '--customclassifiers' in sys.argv:
         customclassifiers = True
     else:
         customclassifiers = False
     
-    if 'customurl' in sys.argv:
+    if 'customurl' in sys.argv or '-customurl' in sys.argv or '--customurl' in sys.argv:
         customurl = True
     else:
         customurl = False
     
-    if 'forceupgrade' in sys.argv:
+    if 'forceupgrade' in sys.argv or '-forceupgrade' in sys.argv or '--forceupgrade' in sys.argv:
         upgrade = True
     else:
         upgrade = False
 
-    if 'customsetup' in sys.argv:
+    if 'customsetup' in sys.argv or '-customsetup' in sys.argv or '--customsetup' in sys.argv:
         customsetup = True
     else:
         customsetup = False

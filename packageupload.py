@@ -380,6 +380,21 @@ def setup(customurl=False, force_upgrade=False):
         author = package_infos['info']['author']
         email = package_infos['info']['author_email']
         url = package_infos['info']['home_page']
+        def ask_for_github_release():
+            global download_url
+            print('What is the URL of your GitHub release? (it ends with .tar.gz)')
+            download_url_try = input('> ')
+            print('')
+            if lifeeasy.request_statuscode(method='get', url=download_url_try) == 200:
+                download_url = download_url_try
+            else:
+                print("It seems that you mistyped the URL or that the repository is private...")
+                lifeeasy.sleep(2)
+                print("Please put your GitHub repository visibility in public and retry...")
+                print('')
+                lifeeasy.sleep(2)
+                ask_for_github_release()
+        ask_for_github_release()
         download_url = package_infos['info']['download_url']
         keywords_string = package_infos['info']['keywords']
         keywords = keywords_string.split(',')
@@ -501,6 +516,8 @@ def setup(customurl=False, force_upgrade=False):
     lifeeasy.sleep(random.uniform(0.126, 0.31))
     setup.append('long_description_content_type = "' + long_description_type + '",')
 
+    setup.append('include_package_data=True,')
+
     if custom_setup == True:
         print('adding your custom setup sections')
         lifeeasy.sleep(random.uniform(0.126, 0.31))
@@ -588,10 +605,7 @@ def download():
         print('What is the name of the package that you want to install?')
         package_name = input('> ')
     try:
-        if upgrade == False:
-            lifeeasy.command('pip install ' + package_name)
-        else:
-            lifeeasy.command('pip install ' + package_name + ' --upgrade')
+        lifeeasy.pip_install(package_name, upgrade=True)
         return 0
     except:
         return 1
